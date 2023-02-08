@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="EmptyView">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="426"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_more_data" translatesAutoresizingMaskIntoConstraints="NO" id="7w0-kG-kCs">
+                    <rect key="frame" x="132" y="68" width="150" height="129"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="暂无数据" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tgw-5M-OaS">
+                    <rect key="frame" x="34" y="221" width="346" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="999999"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tjD-Ha-NrP">
+                    <rect key="frame" x="135" y="272" width="144" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="Got-Pd-dNo"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="PingFangSC-Semibold" family="PingFang SC" pointSize="14"/>
+                    <inset key="contentEdgeInsets" minX="44" minY="0.0" maxX="44" maxY="0.0"/>
+                    <state key="normal" title="创建帖子">
+                        <color key="titleColor" name="#E01222"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                            <real key="value" value="0.88"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="22"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                            <color key="value" name="E6262F"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="funcHandle:" destination="iN0-l3-epB" eventType="touchUpInside" id="02v-R2-wZR"/>
+                    </connections>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" name="F6F7F9"/>
+            <constraints>
+                <constraint firstItem="tgw-5M-OaS" firstAttribute="top" secondItem="7w0-kG-kCs" secondAttribute="bottom" constant="24" id="4AP-Fy-pQV"/>
+                <constraint firstItem="tgw-5M-OaS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="34" id="JAd-Fz-SFR"/>
+                <constraint firstItem="7w0-kG-kCs" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="68" id="No3-sd-lh8"/>
+                <constraint firstItem="7w0-kG-kCs" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="ah6-uf-agF"/>
+                <constraint firstItem="tjD-Ha-NrP" firstAttribute="top" secondItem="tgw-5M-OaS" secondAttribute="bottom" constant="34" id="e74-Hh-opA"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="tgw-5M-OaS" secondAttribute="trailing" constant="34" id="kMG-iH-Z0J"/>
+                <constraint firstItem="tjD-Ha-NrP" firstAttribute="centerX" secondItem="tgw-5M-OaS" secondAttribute="centerX" id="qdV-0j-uHD"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="btn" destination="tjD-Ha-NrP" id="zzF-Xx-gfN"/>
+                <outlet property="icon" destination="7w0-kG-kCs" id="rNi-xK-s0U"/>
+                <outlet property="tit" destination="tgw-5M-OaS" id="GKm-gc-3ha"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="-4.6875"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="no_more_data" width="150" height="129"/>
+        <namedColor name="#E01222">
+            <color red="0.87800002098083496" green="0.071000002324581146" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="999999">
+            <color red="0.60000002384185791" green="0.60000002384185791" blue="0.60000002384185791" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="E6262F">
+            <color red="0.90200001001358032" green="0.14900000393390656" blue="0.18400000035762787" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="F6F7F9">
+            <color red="0.9649999737739563" green="0.96899998188018799" blue="0.97600001096725464" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

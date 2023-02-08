@@ -1,0 +1,6 @@
+framework module Pods_STA {
+  umbrella header "Pods-STA-umbrella.h"
+
+  export *
+  module * { export * }
+}
