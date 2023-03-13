@@ -55,9 +55,9 @@
     self.view.backgroundColor = [UIColor colorNamed:@"FFFFFF"];
     NSDictionary *biologyDic = [NSDictionary dictionaryWithDictionary:YYD(@"Biology")];
     LoginModel *biologyModel = [LoginModel yy_modelWithDictionary:biologyDic];
-    
+    [MBProgressHUD showMessage:@"Loading..."];
     NSString *urlStr = [NSString stringWithFormat:@"%@admin/login.action?user.usercode=%@&user.password=%@&token=%@&clienttype=%ld",BASE_URL,_dataModel.username,_dataModel.password,_dataModel.token,_dataModel.clienttype];
-    NSLog(@"%@",urlStr);
+    //NSLog(@"%@",urlStr);
     
     if (biologyModel.biology && [biologyModel.biology isEqualToString:@"open"]) {
         WS(ws);
@@ -67,14 +67,14 @@
             if (isSuccess) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     ws.view.backgroundColor = [UIColor colorNamed:@"3B404D"];
-                    [ws.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+                    [ws.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:10]];
                 });
             } else {
                 [[YYTouchIDManager shareManager] openTouchId:NO block:^(BOOL isSuccess) {
                     if (isSuccess) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             ws.view.backgroundColor = [UIColor colorNamed:@"3B404D"];
-                            [ws.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+                            [ws.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:10]];
                         });
                     } else {
                         dispatch_async(dispatch_get_main_queue(), ^{
@@ -82,7 +82,7 @@
                             NSString *jsStr = [NSString stringWithFormat:@"failLocation()"];
                             [ws.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
                                 if (error) {
-                                    NSLog(@"错误:%@", error.localizedDescription);
+                                    NSLog(@"初次加载错误:%@", error.localizedDescription);
                                 }
                             }];
                         });
@@ -91,7 +91,7 @@
             }
         }];
     } else {
-        [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+        [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:10]];
     }
     //http://eleapp.7tech.sg/admin/login.action?user.usercode=admin&user.password=111111&token=sadfaf&clienttype=2
 }
@@ -119,7 +119,7 @@
                NSString *jsStr = [NSString stringWithFormat:@"toLocation(%f,%f,'%@')",curCoordinate2D.longitude, curCoordinate2D.latitude, addressStr];
                [ws.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
                    if (error) {
-                       NSLog(@"错误:%@", error.localizedDescription);
+                       NSLog(@"定位错误:%@", error.localizedDescription);
                    }
                }];
             break;
@@ -134,7 +134,7 @@
       NSString *jsStr = [NSString stringWithFormat:@"failLocation()"];
       [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
           if (error) {
-              NSLog(@"错误:%@", error.localizedDescription);
+              NSLog(@"定位失败错误:%@", error.localizedDescription);
           }
       }];
   }
@@ -225,37 +225,15 @@
         lgVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentViewController:lgVC animated:YES completion:^{}];
         lgVC.lgSuccess = ^(LoginViewController * _Nonnull hdVC, LoginModel * _Nonnull hdModel, BOOL rlt) {
-            //清空浏览器缓存
-            [ws clearCookies];
             ws.dataModel = hdModel;
             //根据新登录账号重新加载
             NSString *urlStr = [NSString stringWithFormat:@"%@admin/login.action?user.usercode=%@&user.password=%@&token=%@&clienttype=%ld",BASE_URL,ws.dataModel.username,ws.dataModel.password,ws.dataModel.token,ws.dataModel.clienttype];
-            NSLog(@"%@",urlStr);
-            [ws.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+            [ws.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:10]];
         };
     }
 }
-
-- (void)clearCookies{
-    WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
-    [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
-                     completionHandler:^(NSArray<WKWebsiteDataRecord *> * __nonnull records) {
-        for (WKWebsiteDataRecord *record  in records) {
-            //清空7techsg的缓存
-            if ([record.displayName containsString:@"7techsg"]) {
-                [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
-                                                          forDataRecords:@[record]
-                                                       completionHandler:^{
-                    NSLog(@"Cookies for %@ deleted successfully",record.displayName);
-                }];
-            }
-        }
-    }];
-   
-}
 /*!上传图片*/
 - (void)uploadPic {
-    NSLog(@"uploadPic");
     //唤起相册或打开相机
     WS(ws);
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"choose photo" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
@@ -288,6 +266,7 @@
     [alertController addAction:cancelAction];
     [ws presentViewController:alertController animated:YES completion:nil];
 }
+
 - (void)updataFaceImage:(UIImage *)image {
     [MBProgressHUD showMessage:@"Loading..."];
     WS(ws);
@@ -316,7 +295,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
             NSString *jsStr = [NSString stringWithFormat:@"tofaceuploadpath('%@')", responseObject[@"filepath"]];
             [ws.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
                 if (error) {
-                    NSLog(@"错误:%@", error.localizedDescription);
+                    NSLog(@"上传头像错误:%@", error.localizedDescription);
                 }
             }];
         } else {
@@ -336,7 +315,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
     pVC.modalPresentationStyle = UIModalPresentationFullScreen;
     pVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     pVC.picBlock = ^(YYTakePhotosViewController * _Nonnull hdVC, UIImage * _Nullable hdImg) {
-        hdImg = [hdImg sd_resizedImageWithSize:CGSizeMake(240, 270) scaleMode:SDImageScaleModeFill];
+        hdImg = [hdImg sd_resizedImageWithSize:CGSizeMake(320, 320) scaleMode:SDImageScaleModeFill];
         //NSLog(@"%@",NSStringFromCGSize(hdImg.size));
         //计算图片大小
         //[ws calulateImageFileSize:hdImg];
@@ -369,7 +348,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSString *jsStr = [NSString stringWithFormat:@"tobackuploadpath('%@')", responseObject[@"filepath"]];
         [ws.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
             if (error) {
-                NSLog(@"错误:%@", error.localizedDescription);
+                NSLog(@"上传图片错误:%@", error.localizedDescription);
             }
         }];
     } else {
@@ -410,31 +389,6 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
 
 /*!开始定位*/
 - (void)getLocation {
-    /*CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-    switch (status) {
-        case kCLAuthorizationStatusNotDetermined:
-            //The user hasn't yet chosen whether your app can use location services or not.
-            break;
-            
-        case kCLAuthorizationStatusAuthorizedAlways:
-            //The user has let your app use location services all the time, even if the app is in the background.
-            break;
-            
-        case kCLAuthorizationStatusAuthorizedWhenInUse:
-            //The user has let your app use location services only when the app is in the foreground.
-            break;
-        case kCLAuthorizationStatusRestricted:
-            //The user can't choose whether or not your app can use location services or not, this could be due to parental controls for example.
-            break;
-            
-        case kCLAuthorizationStatusDenied:
-            //The user has chosen to not let your app use location services.
-            break;
-            
-        default:
-            break;
-    }*/
-    
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager requestWhenInUseAuthorization];
@@ -486,7 +440,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         }
         [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
             if (error) {
-                NSLog(@"错误:%@", error.localizedDescription);
+                NSLog(@"加载完成错误:%@", error.localizedDescription);
             }
         }];
     }
@@ -503,14 +457,71 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
      */
 }
 
+//请求页面过程中的错误 服务器接收到请求，并开始返回数据给到客户端的过程中出现传输错误 传输过程中，断网了或者服务器down掉
 - (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
     [MBProgressHUD hideHUD];
     [MBProgressHUD showError:error.localizedDescription];
 }
 
-// 接收到服务器跳转请求之后调用
+//在开始加载的数据时发生错误时调用
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
+    NSLog(@"在开始加载的数据时发生错误时调用");
+    [MBProgressHUD hideHUD];
+    [MBProgressHUD showError:error.localizedDescription];
+}
+
+//9.0才能使用，web内容处理中断时会触发
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView {
+    NSLog(@"web内容处理中断时会触发");
+    [MBProgressHUD hideHUD];
+    [webView reload];
+}
+
+//服务器开始请求的时候调用
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    NSLog(@"sub web URl : %@",navigationAction.request.URL);
+
+    decisionHandler(WKNavigationActionPolicyAllow);
+}
+
+
+
+//解决cookies丢失问题  收到响应后决定是否跳转 (服务器收到请求后)
+//- (void)webView:(WKWebView*)webView decidePolicyForNavigationResponse:(WKNavigationResponse*)navigationResponse decisionHandler:(void(^)(WKNavigationResponsePolicy))decisionHandler{
+//    if (@available(iOS 12.0, *)) {
+//        //iOS11也有这种获取方式，但是我使用的时候iOS11系统可以在response里面直接获取到，只有iOS12获取不到
+//        WKHTTPCookieStore *cookieStore = webView.configuration.websiteDataStore.httpCookieStore;
+//        [cookieStore getAllCookies:^(NSArray* cookies) {
+//            [self setCookie:cookies];
+//        }];
+//    }else {
+//        NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
+//        NSArray *cookies =[NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
+//        [self setCookie:cookies];
+//    }
+//    decisionHandler(WKNavigationResponsePolicyAllow);
+//}
+//
+//-(void)setCookie:(NSArray *)cookies {
+//    NSLog(@"%@",cookies);
+////    if (cookies.count > 0) {
+////        for (NSHTTPCookie *cookie in cookies) {
+////            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+////        }
+////    }
+//}
+
+// 接收到服务器跳转请求之后调用 主机地址被重定向时调用
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation{
     NSLog(@"接收到服务器跳转请求之后调用");
+}
+
+// 当内容开始返回时调用
+- (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation {
+    NSLog(@"内容开始返回");
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [MBProgressHUD hideHUD];
+//    });
 }
 
 - (void)didReceiveMemoryWarning {
@@ -530,7 +541,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSString *jsStr = [NSString stringWithFormat:@"callBiology('0')"];
         [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
             if (error) {
-                NSLog(@"错误:%@", error.localizedDescription);
+                NSLog(@"是否支持指纹解锁或者人脸识别1错误:%@", error.localizedDescription);
             }
         }];
         [self closeBiology];
@@ -554,7 +565,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
                 NSString *jsStr = [NSString stringWithFormat:@"callBiology('1')"];
                 [ws.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
                     if (error) {
-                        NSLog(@"错误:%@", error.localizedDescription);
+                        NSLog(@"是否支持指纹解锁或者人脸识别2错误:%@", error.localizedDescription);
                     }
                 }];
             }];
@@ -563,7 +574,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
                 NSString *jsStr = [NSString stringWithFormat:@"callBiology('0')"];
                 [ws.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
                     if (error) {
-                        NSLog(@"错误:%@", error.localizedDescription);
+                        NSLog(@"是否支持指纹解锁或者人脸识别3错误:%@", error.localizedDescription);
                     }
                 }];
             }];
@@ -584,7 +595,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
             NSString *jsStr = [NSString stringWithFormat:@"callBiology('0')"];
             [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable data, NSError * _Nullable error) {
                 if (error) {
-                    NSLog(@"错误:%@", error.localizedDescription);
+                    NSLog(@"是否支持指纹解锁或者人脸识别4错误:%@", error.localizedDescription);
                 }
             }];
             [self closeBiology];

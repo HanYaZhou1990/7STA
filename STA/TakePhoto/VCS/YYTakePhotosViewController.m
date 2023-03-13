@@ -31,6 +31,8 @@
     self.title = @"Face Identification";
     _frontCamera = NO;
     
+    self.view.backgroundColor = Color(@"00000080");
+    
     [self authorization];
 }
 
@@ -153,6 +155,7 @@
 
 /*!取消重新拍照*/
 - (IBAction)collect:(UIButton *)sender {
+    _avLayerView.alpha = 1;
     self.photo.image = nil;
     self.photo.hidden = YES;
     _take.hidden = NO;
@@ -180,19 +183,36 @@
         CGImageRef cgImage = [photo CGImageRepresentation];
         UIImageOrientation imgOrientation = UIImageOrientationLeftMirrored;
         UIImage *image = [[UIImage alloc]initWithCGImage:cgImage scale:1.0f orientation:imgOrientation];
+        
+        
         //CGRect convertRect = [_picBG convertRect:_picBG.frame toView:_photo];
-        CGFloat stateH = [VQPNotchScreenUtil getIPhoneNotchScreenHeight] + 24;
+        //CGFloat stateH = [VQPNotchScreenUtil getIPhoneNotchScreenHeight] + 24;
         //CGRect convertRect = CGRectMake(CGRectGetMinX(_picBG.frame), CGRectGetMinY(_picBG.frame) - (stateH), CGRectGetWidth(_picBG.frame), CGRectGetHeight(_picBG.frame));
-        CGRect convertRect = CGRectMake(CGRectGetMinX(self.coverImgView.frame), CGRectGetMinY(self.coverImgView.frame) - (stateH), CGRectGetWidth(self.coverImgView.frame), CGRectGetHeight(self.coverImgView.frame));
+        
+        //2023/02/16注释，使用下方convertRect
+        //CGFloat stateH = [VQPNotchScreenUtil getIPhoneNotchScreenHeight] + 24;
+        //CGRect convertRect = CGRectMake(CGRectGetMinX(self.coverImgView.frame), CGRectGetMinY(self.coverImgView.frame) - (stateH), CGRectGetWidth(self.coverImgView.frame), CGRectGetHeight(self.coverImgView.frame));
+        CGRect convertRect = CGRectMake(0, (CGRectGetHeight(self.coverImgView.frame) - CGRectGetWidth(self.coverImgView.frame))/4.4f, CGRectGetWidth(self.coverImgView.frame), CGRectGetWidth(self.coverImgView.frame));
+        
+        
         //UIImage *nowImg = [self editImageWithOldImage:image OldFrame:_photo.frame CropFrame:_picBG.frame Scale:0.5];
         UIImage *nowImg = [self editImageWithOldImage:image OldFrame:_photo.frame CropFrame:convertRect Scale:0.5];
+
         _uploadImg = nowImg;
-        self.photo.image = image;
+        self.photo.image = nowImg;
         self.photo.hidden = NO;
         [self.session stopRunning];
+        
+        if (self.uploadImg) {
+            self.picBlock(self, nowImg);
+        } else {
+            self.picBlock(self, nil);
+        }
+        [self.navigationController popViewControllerAnimated:YES];
         //保存到相册
-        //UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+        //UIImageWriteToSavedPhotosAlbum(nowImg, nil, nil, nil);
     }
+    _avLayerView.alpha = 0;
     _take.userInteractionEnabled = YES;
     _take.hidden = YES;
     _switchBtn.hidden = YES;

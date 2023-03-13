@@ -25,7 +25,27 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    //清空浏览器缓存
+    [self clearCookies];
     [self setShouldNavigationBarHidden:YES];
+}
+
+- (void)clearCookies{
+    WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
+    [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
+                     completionHandler:^(NSArray<WKWebsiteDataRecord *> * __nonnull records) {
+        for (WKWebsiteDataRecord *record  in records) {
+            //清空7techsg的缓存
+            if ([record.displayName containsString:@"7techsg"]) {
+                [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
+                                                          forDataRecords:@[record]
+                                                       completionHandler:^{
+                    //NSLog(@"Cookies for %@ deleted successfully",record.displayName);
+                }];
+            }
+        }
+    }];
+   
 }
 
 - (void)viewDidLoad {

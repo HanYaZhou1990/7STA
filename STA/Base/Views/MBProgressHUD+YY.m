@@ -7,6 +7,7 @@
 //
 
 #import "MBProgressHUD+YY.h"
+#import "SceneDelegate.h"
 
 @implementation MBProgressHUD (YY)
 
@@ -124,7 +125,17 @@
 
 + (UIWindow *)keyWindow {
     UIWindow *window;
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15, *)) {
+        __block UIScene * _Nonnull tmpSc;
+        [[[UIApplication sharedApplication] connectedScenes] enumerateObjectsUsingBlock:^(UIScene * _Nonnull obj, BOOL * _Nonnull stop) {
+            if (obj.activationState == UISceneActivationStateForegroundActive) {
+                tmpSc = obj;
+                *stop = YES;
+            }
+        }];
+        UIWindowScene *curWinSc = (UIWindowScene *)tmpSc;
+        window = curWinSc.keyWindow;
+    } else if (@available(iOS 13.0, *)) {
         for (UIWindowScene* windowScene in [UIApplication sharedApplication].connectedScenes) {
             if (windowScene.activationState == UISceneActivationStateForegroundActive){
                 window = windowScene.windows.lastObject;
@@ -141,8 +152,25 @@
             }
         }
     } else {
-        window = UIApplication.sharedApplication.keyWindow?UIApplication.sharedApplication.keyWindow:UIApplication.sharedApplication.windows[0];
+        window = [[UIApplication sharedApplication] windows].firstObject;
     }
+    
+    if (!window) {
+        UIScene * _Nullable scene = [UIApplication sharedApplication].openSessions.allObjects.lastObject.scene;
+        SceneDelegate *dlt = (SceneDelegate *)scene.delegate;
+        window = dlt.window;
+    }
+    
+    if (!window) {
+        NSArray *windows = [[UIApplication sharedApplication] windows];
+        for(UIWindow *wd in [windows reverseObjectEnumerator]) {
+            if ([wd isKindOfClass:[UIWindow class]] && wd.windowLevel == UIWindowLevelNormal && CGRectEqualToRect(wd.bounds, [UIScreen mainScreen].bounds)) {
+                window = wd;
+                break;
+            }
+        }
+    }
+    
     return window;
 }
 

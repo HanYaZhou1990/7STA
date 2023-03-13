@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL frontCamera;
 /*!待取图片的背景*/
 //@property (nonatomic, weak) IBOutlet UIView *picBG;
-@property (nonatomic, weak) IBOutlet UIImageView *coverImgView;
+@property (nonatomic, weak) IBOutlet UIView *coverImgView;
 /*!*/
 @property (nonatomic, weak) IBOutlet UIButton *collect;
 /*!上传*/

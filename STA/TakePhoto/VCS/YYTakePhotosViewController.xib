@@ -14,8 +14,8 @@
             <connections>
                 <outlet property="avLayerView" destination="WBq-f6-a3w" id="uhb-H2-WTa"/>
                 <outlet property="collect" destination="u68-od-g6a" id="toC-X9-qRe"/>
-                <outlet property="coverImgView" destination="KZA-jv-sfw" id="biK-xh-hp1"/>
-                <outlet property="photo" destination="bed-l1-Sgu" id="byB-xh-5j2"/>
+                <outlet property="coverImgView" destination="5MB-fu-NVD" id="nxB-2g-vTG"/>
+                <outlet property="photo" destination="Eq1-2O-m2m" id="mKr-5b-T9W"/>
                 <outlet property="switchBtn" destination="xbb-fb-sHR" id="kS9-Rb-bpn"/>
                 <outlet property="take" destination="E4D-Je-wH8" id="tak-Im-REq"/>
                 <outlet property="upload" destination="S2V-h1-K92" id="pe3-gp-v88"/>
@@ -28,25 +28,25 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WBq-f6-a3w">
-                    <rect key="frame" x="0.0" y="44" width="414" height="764"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                    <color key="backgroundColor" name="00000080"/>
+                </view>
+                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Eq1-2O-m2m">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5MB-fu-NVD">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                     <subviews>
-                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bed-l1-Sgu">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="764"/>
-                        </imageView>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pictureFrame" translatesAutoresizingMaskIntoConstraints="NO" id="KZA-jv-sfw">
-                            <rect key="frame" x="0.0" y="44" width="414" height="720"/>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pictureFrame" translatesAutoresizingMaskIntoConstraints="NO" id="uN0-X5-R7v">
+                            <rect key="frame" x="0.0" y="20" width="414" height="808"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="bed-l1-Sgu" firstAttribute="top" secondItem="WBq-f6-a3w" secondAttribute="top" id="2qG-pF-aF3"/>
-                        <constraint firstAttribute="bottom" secondItem="bed-l1-Sgu" secondAttribute="bottom" id="Aaj-No-yc3"/>
-                        <constraint firstItem="bed-l1-Sgu" firstAttribute="leading" secondItem="WBq-f6-a3w" secondAttribute="leading" id="HHi-NF-qPM"/>
-                        <constraint firstAttribute="bottom" secondItem="KZA-jv-sfw" secondAttribute="bottom" id="Ub8-KA-NYn"/>
-                        <constraint firstAttribute="trailing" secondItem="bed-l1-Sgu" secondAttribute="trailing" id="bhf-A5-OQi"/>
-                        <constraint firstItem="KZA-jv-sfw" firstAttribute="top" secondItem="WBq-f6-a3w" secondAttribute="top" constant="44" id="fCi-Px-XSl"/>
-                        <constraint firstAttribute="trailing" secondItem="KZA-jv-sfw" secondAttribute="trailing" id="qN0-Dr-et3"/>
-                        <constraint firstItem="KZA-jv-sfw" firstAttribute="leading" secondItem="WBq-f6-a3w" secondAttribute="leading" id="qcp-f3-l9L"/>
+                        <constraint firstItem="uN0-X5-R7v" firstAttribute="leading" secondItem="5MB-fu-NVD" secondAttribute="leading" id="7NB-kh-55I"/>
+                        <constraint firstAttribute="bottom" secondItem="uN0-X5-R7v" secondAttribute="bottom" constant="-20" id="EXe-Rv-1Nr"/>
+                        <constraint firstAttribute="trailing" secondItem="uN0-X5-R7v" secondAttribute="trailing" id="J7i-ez-qTh"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W3v-wE-w43">
@@ -135,10 +135,19 @@
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="W3v-wE-w43" secondAttribute="bottom" id="0hh-IL-f8U"/>
                 <constraint firstItem="W3v-wE-w43" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="0m9-wt-pLr"/>
+                <constraint firstItem="5MB-fu-NVD" firstAttribute="trailing" secondItem="WBq-f6-a3w" secondAttribute="trailing" id="I9L-GQ-WkF"/>
+                <constraint firstItem="5MB-fu-NVD" firstAttribute="bottom" secondItem="WBq-f6-a3w" secondAttribute="bottom" id="K4B-oL-tOs"/>
+                <constraint firstItem="uN0-X5-R7v" firstAttribute="height" secondItem="WBq-f6-a3w" secondAttribute="height" id="OW6-Um-5ba"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="WBq-f6-a3w" secondAttribute="trailing" id="YCr-5u-kOU"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="E4D-Je-wH8" secondAttribute="bottom" id="YEW-G1-RBE"/>
-                <constraint firstItem="WBq-f6-a3w" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" id="jJs-DA-Krn"/>
+                <constraint firstItem="Eq1-2O-m2m" firstAttribute="leading" secondItem="5MB-fu-NVD" secondAttribute="leading" id="b9y-uI-e3p"/>
+                <constraint firstItem="5MB-fu-NVD" firstAttribute="top" secondItem="WBq-f6-a3w" secondAttribute="top" id="bov-7n-kZ8"/>
+                <constraint firstItem="5MB-fu-NVD" firstAttribute="leading" secondItem="WBq-f6-a3w" secondAttribute="leading" id="iuP-ec-BWl"/>
+                <constraint firstItem="WBq-f6-a3w" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="jJs-DA-Krn"/>
+                <constraint firstItem="Eq1-2O-m2m" firstAttribute="top" secondItem="5MB-fu-NVD" secondAttribute="top" id="jP2-rU-hBV"/>
+                <constraint firstItem="Eq1-2O-m2m" firstAttribute="bottom" secondItem="5MB-fu-NVD" secondAttribute="bottom" id="llp-fi-HKo"/>
                 <constraint firstItem="W3v-wE-w43" firstAttribute="top" secondItem="WBq-f6-a3w" secondAttribute="bottom" id="mzX-Yd-Zcs"/>
+                <constraint firstItem="Eq1-2O-m2m" firstAttribute="trailing" secondItem="5MB-fu-NVD" secondAttribute="trailing" id="pRf-nu-zTY"/>
                 <constraint firstItem="u68-od-g6a" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="tP2-9h-c87"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="W3v-wE-w43" secondAttribute="trailing" id="uv0-4g-etg"/>
                 <constraint firstItem="WBq-f6-a3w" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="v5j-Ia-8Bh"/>
@@ -150,17 +159,20 @@
         <image name="camera.fill" catalog="system" width="128" height="94"/>
         <image name="camera.rotate" catalog="system" width="128" height="94"/>
         <image name="pictureFrame" width="769.5" height="1076"/>
+        <namedColor name="00000080">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.80000001192092896" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="3B404D">
             <color red="0.23100000619888306" green="0.25099998712539673" blue="0.30199998617172241" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="4074CB">
-            <color red="0.25098039215686274" green="0.45490196078431372" blue="0.79607843137254897" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.25099998712539673" green="0.45500001311302185" blue="0.79600000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="C8E2F8">
             <color red="0.7839999794960022" green="0.88599997758865356" blue="0.97299998998641968" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="D1D1D1">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.81960784313725488" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.81999999284744263" green="0.81999999284744263" blue="0.81999999284744263" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="FFFFFF">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
