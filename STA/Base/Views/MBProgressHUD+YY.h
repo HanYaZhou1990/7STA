@@ -31,5 +31,6 @@
 + (void)hideHUD;
 /*!隐藏指定的view上MBProgressHUD*/
 + (void)hideHUDForView:(UIView *)view;
++ (UIWindow *)keyWindow;
 
 @end

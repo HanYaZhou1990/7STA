@@ -110,10 +110,10 @@
             responseModel.username = ws.parameters.username;
             responseModel.password = ws.parameters.password;
             responseModel.clienttype = ws.parameters.clienttype;
-            MainWebViewController *webVC = [[MainWebViewController alloc] init];
-            webVC.dataModel = responseModel;
+            responseModel.url = [NSString stringWithFormat:@"%@/",responseModel.url];
+            
             // 保存账号密码
-            [[NSUserDefaults standardUserDefaults] setObject:@{@"user.usercode":responseModel.username,@"user.password":responseModel.password,@"token":responseModel.token} forKey:@"STAUP"];
+            [[NSUserDefaults standardUserDefaults] setObject:@{@"user.usercode":responseModel.username,@"user.password":responseModel.password,@"token":responseModel.token,@"url":responseModel.url} forKey:@"STAUP"];
             NSDictionary *firstDic = [NSDictionary dictionaryWithDictionary:YYD(@"FST")];
             LoginModel *firstModel = [LoginModel yy_modelWithDictionary:firstDic];
             if (firstModel.first && [firstModel.first isEqualToString:@""]) {
@@ -122,6 +122,9 @@
                 
             }
             [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            MainWebViewController *webVC = [[MainWebViewController alloc] init];
+            webVC.dataModel = responseModel;
             if (ws.lgSuccess) {
                 ws.lgSuccess(ws, responseModel, YES);
                 [ws dismissViewControllerAnimated:YES completion:^{}];

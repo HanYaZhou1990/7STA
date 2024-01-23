@@ -17,6 +17,7 @@
 @interface MainWebViewController () <CLLocationManagerDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) LoginModel *userModel;
 
 @end
 
@@ -29,6 +30,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+//    NSHTTPCookie *cook = [[NSHTTPCookie alloc] initWithProperties:@{@"usercode":@1}];
+//    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cook];
+    
     UIView *topView = [[UIView alloc] initWithFrame:CGRectZero];
     topView.backgroundColor = [UIColor colorNamed:@"FFFFFF"];
     [self.view addSubview:topView];
@@ -55,13 +60,16 @@
     self.view.backgroundColor = [UIColor colorNamed:@"FFFFFF"];
     NSDictionary *biologyDic = [NSDictionary dictionaryWithDictionary:YYD(@"Biology")];
     LoginModel *biologyModel = [LoginModel yy_modelWithDictionary:biologyDic];
-    [MBProgressHUD showMessage:@"Loading..."];
-    NSString *urlStr = [NSString stringWithFormat:@"%@admin/login.action?user.usercode=%@&user.password=%@&token=%@&clienttype=%ld",BASE_URL,_dataModel.username,_dataModel.password,_dataModel.token,_dataModel.clienttype];
-    //NSLog(@"%@",urlStr);
+    //[MBProgressHUD showMessage:@"Loading..."];
+    NSString *urlStr = [NSString stringWithFormat:@"%@admin/login.action?user.usercode=%@&user.password=%@&token=%@&clienttype=%ld",self.userModel.url,_dataModel.username,_dataModel.password,_dataModel.token,_dataModel.clienttype];
+    urlStr = [urlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSLog(@"%@",urlStr);
     
     if (biologyModel.biology && [biologyModel.biology isEqualToString:@"open"]) {
         WS(ws);
-        NSString *urlStr = [NSString stringWithFormat:@"%@admin/login.action?user.usercode=%@&user.password=%@&token=%@&clienttype=%ld",BASE_URL,_dataModel.username,_dataModel.password,_dataModel.token,_dataModel.clienttype];
+        NSString *bsUrl = (self.userModel.url && self.userModel.url.length>0) ? self.userModel.url : BASE_URL;
+        NSString *urlStr = [NSString stringWithFormat:@"%@admin/login.action?user.usercode=%@&user.password=%@&token=%@&clienttype=%ld",bsUrl,_dataModel.username,_dataModel.password,_dataModel.token,_dataModel.clienttype];
+        urlStr = [urlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
         NSLog(@"%@",urlStr);
         [[YYTouchIDManager shareManager] openTouchId:NO block:^(BOOL isSuccess) {
             if (isSuccess) {
@@ -215,7 +223,7 @@
     NSLog(@"popBack");
     //清空缓存的用户信息
     WS(ws);
-    [[NSUserDefaults standardUserDefaults] setObject:@{@"user.usercode":@"",@"user.password":@"",@"token":@""} forKey:@"STAUP"];
+    [[NSUserDefaults standardUserDefaults] setObject:@{@"user.usercode":@"",@"user.password":@"",@"token":@"",@"url":@""} forKey:@"STAUP"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     if (self.navigationController.viewControllers.count > 1) {
         [self.navigationController popViewControllerAnimated:YES];
@@ -227,7 +235,8 @@
         lgVC.lgSuccess = ^(LoginViewController * _Nonnull hdVC, LoginModel * _Nonnull hdModel, BOOL rlt) {
             ws.dataModel = hdModel;
             //根据新登录账号重新加载
-            NSString *urlStr = [NSString stringWithFormat:@"%@admin/login.action?user.usercode=%@&user.password=%@&token=%@&clienttype=%ld",BASE_URL,ws.dataModel.username,ws.dataModel.password,ws.dataModel.token,ws.dataModel.clienttype];
+            NSString *urlStr = [NSString stringWithFormat:@"%@admin/login.action?user.usercode=%@&user.password=%@&token=%@&clienttype=%ld",self.userModel.url,ws.dataModel.username,ws.dataModel.password,ws.dataModel.token,ws.dataModel.clienttype];
+            urlStr = [urlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
             [ws.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:10]];
         };
     }
@@ -272,7 +281,7 @@
     WS(ws);
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = nil;
-    [manager POST:[NSString stringWithFormat:@"%@phone/fileupload.action",BASE_URL]
+    [manager POST:[NSString stringWithFormat:@"%@phone/fileupload.action",self.userModel.url]
        parameters:@{}
           headers:@{}
 constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
@@ -329,7 +338,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
     WS(ws);
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = nil;
-    [manager POST:[NSString stringWithFormat:@"%@phone/fileupload.action",BASE_URL]
+    [manager POST:[NSString stringWithFormat:@"%@phone/fileupload.action",self.userModel.url]
        parameters:@{}
           headers:@{}
 constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
@@ -486,7 +495,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
 
 
 
-//解决cookies丢失问题  收到响应后决定是否跳转 (服务器收到请求后)
+////解决cookies丢失问题  收到响应后决定是否跳转 (服务器收到请求后)
 //- (void)webView:(WKWebView*)webView decidePolicyForNavigationResponse:(WKNavigationResponse*)navigationResponse decisionHandler:(void(^)(WKNavigationResponsePolicy))decisionHandler{
 //    if (@available(iOS 12.0, *)) {
 //        //iOS11也有这种获取方式，但是我使用的时候iOS11系统可以在response里面直接获取到，只有iOS12获取不到
@@ -503,7 +512,10 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
 //}
 //
 //-(void)setCookie:(NSArray *)cookies {
-//    NSLog(@"%@",cookies);
+//    NSLog(@"cookies ： %@",cookies);
+//    [cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        NSLog(@" %@",obj.name);
+//    }];
 ////    if (cookies.count > 0) {
 ////        for (NSHTTPCookie *cookie in cookies) {
 ////            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
@@ -602,6 +614,13 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         }
     }
 }
+- (LoginModel *)userModel {
+    if (!_userModel) {
+        _userModel = [[LoginModel alloc] init];
+    }
+    return _userModel;
+}
+
 /*
 - (void)evaluatePolicy {
     WS(ws);

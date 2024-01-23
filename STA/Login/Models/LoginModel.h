@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger ret;
 /*!token*/
 @property (nonatomic, strong) NSString *token;
+/*!服务器地址*/
+@property (nonatomic, strong) NSString *url;
 /*!请求出问题的错误提示信息*/
 @property (nonatomic, strong) NSString *msg;
 /*!是否为第一次启动 first 第一次 其他不是*/
